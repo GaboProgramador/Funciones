@@ -1,57 +1,4 @@
 //Funciones Grafos
-
-int ** distancia(GrafoMatriz g){
-    int a;
-    int cont = 0;
-    int n = g.getNumVerts();
-    typedef int *punt;
-    int ** p = new punt[n];
-    string q;
-
-    for(int i=0;i<n;i++){
-        p[i] = new int[n];
-    }
-
-    cout<<endl<<"Ingrese el numero de arcos: "; cin>>a;
-    cin.ignore();
-    cout<<"Ingrese el nombre del vertice: "; getline(cin, q);
-
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            p[i][j] = g.adyacente(i, j) ? 1:0;
-        }
-    }
-
-    for(int k=0;k<n;k++){
-		for(int i=0;i<n;i++){
-			for(int j=0;j<n;j++){
-				if (p[i][k] * p[k][j]){
-					p[i][j] = 1;
-				}
-			}
-		}
-	}
-
-	cout<<endl<<"Desde el vertice "<<g.getVertice(q).getNumero()+1<<" con "<<a<<" arcos se puede llegar a:";
-	for(int i = g.getVertice(q).getNumero();i<n;i++){
-		cont=0;
-
-		for(int j=0;j<n;j++){
-			if(p[g.getVertice(q).getNumero()][j]){
-				cont++;
-				if(cont > a){
-			     cout<<endl<<"Vertice "<<g.getVertice(j).getNombre();
-			   }
-			}
-
-		}
-		i=n+1;
-	}
-
-	cout<<endl;
-	return p;
-}
-
 void ingresarArcos(GrafoLista *g, string* sa){
 	int nv = g->getNumVerts();
 	int na;
@@ -240,4 +187,141 @@ void calcularGradoEntrada(GrafoLista g){                //calcula el grado de en
 	}
 	cout << endl << "===============================================";
 	cout << endl;
+}
+
+
+
+
+
+
+////////////////////////////////////////
+
+GrafoMatriz ingresarVertices(int n1){				//funcion que ingresa los datos de los vértices de un grafo
+	Tipo aux;
+	GrafoMatriz a(n1);
+
+	for (int i = 0; (i < n1); i++){
+		cout << endl << "Ingrese el Valor del vertice No. " << (i+1) << ": ";
+		cin >> aux; 
+		a.nuevoVertice(aux);
+	}
+	return a;
+}
+
+void ingresarArcos(GrafoMatriz *g){				//funcion que ingresa los datos de los arcos de un grafo
+	int nv = g -> getNumVerts();
+	int na;
+	Tipo aux;
+
+	for (int i = 0; (i < nv); i++){
+		Vertice x = g -> getVertice(i);
+		cout << endl << "Vertice No. " << x.getNum()+1 << " - " << x.getDato() << " - ";
+		cout << endl << "CANTIDAD DE ARCOS DE SALIDA DEL VERTICE";
+		na = leerN(0, 10);
+		cin.ignore();
+		
+		for (int j = 0; (j < na); j++){
+			cout << endl << "Valor del Vertice Destino: ";
+			cin >> aux; 
+			g -> setArco(x.getDato(), aux);
+		}
+	}
+}
+
+void ingresarArcosValor(GrafoMatriz *g){			//funcion que ingresa los datos de los arcos de un grafo incluido peso
+	int nv = g -> getNumVerts();
+	int na;
+	int peso;						//peso del arco
+	Tipo aux;
+
+	for (int i = 0; (i < nv); i++){
+		Vertice x = g -> getVertice(i);
+		cout << endl << "Vertice No. " << x.getNum()+1 << " - " << x.getDato() << " - ";
+		cout << endl << "CANTIDAD DE ARCOS DE SALIDA DEL VERTICE";
+		na = leerN(0, 10);
+		cin.ignore();
+		
+		for (int j = 0; (j < na); j++){
+			cout << endl << "Identificador del Vertice Destino: ";
+			cin >> aux; 
+			cout << endl << "PESO DEL ARCO";
+			peso = leerN(0, 100);
+			cin.ignore();
+			g -> setArco(x.getDato(), aux, peso);
+		}
+	}
+}
+
+void imprimirGrafo(GrafoMatriz g){				//funcion que presenta los datos del grafo
+	int nv = g.getNumVerts();
+	int na;
+	Tipo aux;
+	cout << endl << "===============================================";
+	cout << endl << "M A T R I Z     D E    A D Y A C E N C I A";
+
+	for (int i = 0; (i < nv); i++){
+		Vertice x = g.getVertice(i);
+		cout << endl << "Vertice No. " << x.getNum()+1 << " - " << x.getDato() << " - ";
+	
+		for (int j = 0; (j < nv); j++){
+			if (g.adyacente(i,j)){
+				Vertice x = g.getVertice(j);
+				cout << endl << "\t\t--->" << x.getDato();
+			}
+		}
+	}
+	cout << endl << "===============================================";
+	cout << endl;
+}
+
+int ** distancia(GrafoMatriz g){
+    int a;
+    int cont = 0;
+    int n = g.getNumVerts();
+    typedef int *punt;
+    int ** p = new punt[n];
+    string q;
+
+    for(int i=0;i<n;i++){
+        p[i] = new int[n];
+    }
+
+    cout<<endl<<"Ingrese el numero de arcos: "; cin>>a;
+    cin.ignore();
+    cout<<"Ingrese el nombre del vertice: "; getline(cin, q);
+
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            p[i][j] = g.adyacente(i, j) ? 1:0;
+        }
+    }
+
+    for(int k=0;k<n;k++){
+		for(int i=0;i<n;i++){
+			for(int j=0;j<n;j++){
+				if (p[i][k] * p[k][j]){
+					p[i][j] = 1;
+				}
+			}
+		}
+	}
+
+	cout<<endl<<"Desde el vertice "<<g.getVertice(q).getNumero()+1<<" con "<<a<<" arcos se puede llegar a:";
+	for(int i = g.getVertice(q).getNumero();i<n;i++){
+		cont=0;
+
+		for(int j=0;j<n;j++){
+			if(p[g.getVertice(q).getNumero()][j]){
+				cont++;
+				if(cont > a){
+			     cout<<endl<<"Vertice "<<g.getVertice(j).getNombre();
+			   }
+			}
+
+		}
+		i=n+1;
+	}
+
+	cout<<endl;
+	return p;
 }
